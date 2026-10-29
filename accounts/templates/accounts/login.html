@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>ورود به سامانه | از مزرعه تا سفره</title>
+
+<style>
+    body {
+        font-family: Tahoma, Arial, sans-serif;
+        background: #f2f7f0;
+        margin: 0;
+        padding: 40px 15px;
+        color: #333;
+    }
+
+    .login-container {
+        max-width: 420px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 14px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+        text-align: center;
+        color: #287a3d;
+        font-size: 24px;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 25px;
+    }
+
+    .form-field {
+        margin-bottom: 18px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        font-family: inherit;
+        font-size: 14px;
+    }
+
+    .errorlist {
+        color: #c62828;
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .submit-button {
+        width: 100%;
+        padding: 13px;
+        border: none;
+        border-radius: 7px;
+        background: #287a3d;
+        color: white;
+        font-family: inherit;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .submit-button:hover {
+        background: #1e6030;
+    }
+
+    .register-link,
+    .back-link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        color: #287a3d;
+        text-decoration: none;
+    }
+
+    .register-link:hover,
+    .back-link:hover {
+        text-decoration: underline;
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="login-container">
+
+```
+<h1>ورود به سامانه</h1>
+
+<p class="subtitle">
+    برای ادامه فعالیت در «از مزرعه تا سفره» وارد حساب خود شوید.
+</p>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% if form.errors %}
+        <p class="errorlist">
+            نام کاربری یا رمز عبور صحیح نیست.
+            لطفاً اطلاعات خود را بررسی کنید.
+        </p>
+    {% endif %}
+
+    {% for field in form %}
+        <div class="form-field">
+            <label for="{{ field.id_for_label }}">
+                {% if field.name == "username" %}
+                    نام کاربری
+                {% elif field.name == "password" %}
+                    رمز عبور
+                {% else %}
+                    {{ field.label }}
+                {% endif %}
+            </label>
+
+            {{ field }}
+
+            {{ field.errors }}
+        </div>
+    {% endfor %}
+
+    <button type="submit" class="submit-button">
+        ورود
+    </button>
+</form>
+
+<a href="{% url 'register' %}" class="register-link">
+    حساب کاربری ندارید؟ ثبت‌نام کنید
+</a>
+
+<a href="/" class="back-link">
+    بازگشت به صفحه اصلی
+</a>
+```
+
+</div>
+
+</body>
+</html>

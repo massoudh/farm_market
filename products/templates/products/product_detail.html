@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ product.name }} | از مزرعه تا سفره</title>
+
+    <style>
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            background-color: #f3f7f1;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        h1 {
+            color: #287a3d;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 2;
+        }
+
+        a {
+            color: #287a3d;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>{{ product.name }}</h1>
+
+        <p>
+            قیمت: {{ product.price }} تومان
+        </p>
+
+        <p>
+            موجودی: {{ product.quantity }}
+        </p>
+
+        {% if product.description %}
+            <p>
+                توضیحات: {{ product.description }}
+            </p>
+        {% endif %}
+
+        <p>
+            <a href="{% url 'home' %}">بازگشت به صفحه اصلی</a>
+        </p>
+
+    </div>
+
+</body>
+
+</html>

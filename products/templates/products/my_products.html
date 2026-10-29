@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>محصولات من | از مزرعه تا سفره</title>
+
+    <style>
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            background-color: #f4f8f2;
+            margin: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #2e7d32;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .products-table th,
+        .products-table td {
+            padding: 14px;
+            text-align: right;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .products-table th {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .products-table tr:hover {
+            background-color: #f9fcf8;
+        }
+
+        .empty-message {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #2e7d32;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #2e7d32;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 10px;
+                overflow-x: auto;
+            }
+
+            .products-table {
+                min-width: 600px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>محصولات من</h1>
+    <p>سامانه از مزرعه تا سفره</p>
+</header>
+
+<main class="container">
+
+    <h2>فهرست محصولات ثبت‌شده</h2>
+
+    {% if products %}
+
+    <table class="products-table">
+        <thead>
+            <tr>
+                <th>نام محصول</th>
+                <th>دسته‌بندی</th>
+                <th>قیمت (تومان)</th>
+                <th>موجودی</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>
+                    <a href="{% url 'edit_product' product.id %}"
+                        style="display: inline-block;
+                        padding: 6px 12px;
+                        background-color: #287a3e;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 5px;">
+                        ویرایش
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+    {% else %}
+
+        <div class="empty-message">
+            <p>هنوز محصولی ثبت نکرده‌اید.</p>
+        </div>
+
+    {% endif %}
+
+    <a class="button" href="{% url 'add_product' %}">
+        ثبت محصول جدید
+    </a>
+
+    <a class="back-link" href="{% url 'seller_dashboard' %}">
+        بازگشت به پنل فروشنده
+    </a>
+
+</main>
+
+</body>
+</html>
+```

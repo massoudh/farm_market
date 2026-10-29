@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>ثبت‌نام | از مزرعه تا سفره</title>
+
+
+<style>
+    body {
+        font-family: Tahoma, Arial, sans-serif;
+        background: #f2f7f0;
+        margin: 0;
+        padding: 30px 15px;
+        color: #333;
+    }
+
+    .register-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 14px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+        text-align: center;
+        color: #287a3d;
+        font-size: 25px;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 25px;
+        line-height: 1.8;
+    }
+
+    .form-field {
+        margin-bottom: 18px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    input:not([type="radio"]),
+    textarea,
+    select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px;
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        font-family: inherit;
+        font-size: 14px;
+    }
+
+    input[type="radio"] {
+        margin-left: 7px;
+    }
+
+    ul {
+        padding-right: 22px;
+    }
+
+    .helptext {
+        display: block;
+        margin-top: 6px;
+        color: #777;
+        font-size: 12px;
+        line-height: 1.8;
+    }
+
+    .errorlist {
+        color: #c62828;
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .messages {
+        padding: 0;
+        list-style: none;
+    }
+
+    .messages li {
+        background: #e8f5e9;
+        color: #256b32;
+        padding: 12px;
+        border-radius: 7px;
+        margin-bottom: 10px;
+    }
+
+    .submit-button {
+        width: 100%;
+        padding: 13px;
+        border: none;
+        border-radius: 7px;
+        background: #287a3d;
+        color: white;
+        font-family: inherit;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .submit-button:hover {
+        background: #1e6030;
+    }
+
+    .back-link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        color: #287a3d;
+        text-decoration: none;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="register-container">
+
+```
+<h1>ثبت‌نام در از مزرعه تا سفره</h1>
+
+<p class="subtitle">
+    به سامانه ارتباط مستقیم تولیدکنندگان و خریداران خوش آمدید.
+</p>
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+
+    {% for field in form %}
+        <div class="form-field">
+
+            {{ field.label_tag }}
+
+            {{ field }}
+
+            {% if field.help_text %}
+                <small class="helptext">
+                    {{ field.help_text }}
+                </small>
+            {% endif %}
+
+            {{ field.errors }}
+
+        </div>
+    {% endfor %}
+
+    <button type="submit" class="submit-button">
+        ایجاد حساب کاربری
+    </button>
+</form>
+
+<a href="/" class="back-link">
+    بازگشت به صفحه اصلی
+</a>
+```
+
+</div>
+
+</body>
+</html>
