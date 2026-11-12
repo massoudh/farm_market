@@ -56,4 +56,11 @@ class UserProfile(models.Model):
     class Meta:
         verbose_name = "حساب کاربری"
         verbose_name_plural = "حساب‌های کاربری"
+
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(user_type__in=["buyer", "seller"]),
+                name="user_profile_valid_user_type"
+            )
+        ]
         

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>سفارش‌های دریافتی | از مزرعه تا سفره</title>
+
+    <style>
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            background: #f5f7f5;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        h2 {
+            color: #198754;
+            margin-bottom: 25px;
+        }
+
+        .order-box {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .order-info {
+            line-height: 2;
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: #198754;
+            color: white;
+        }
+
+        .empty-message {
+            background: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .order-box {
+                padding: 10px;
+                overflow-x: auto;
+            }
+
+            th, td {
+                padding: 7px 5px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>سفارش‌های دریافتی من</h2>
+
+    {% if orders %}
+
+        {% for order in orders %}
+
+            <div class="order-box">
+
+                <h3>سفارش شماره: {{ order.order_number }}</h3>
+
+                <div class="order-info">
+
+                    <p>
+                        <strong>تاریخ ثبت:</strong>
+                        {{ order.created_at|date:"Y/m/d - H:i" }}
+                    </p>
+
+                    <p>
+                        <strong>وضعیت سفارش:</strong>
+                        {{ order.get_status_display }}
+                    </p>
+
+                    <p>
+                        <strong>نام تحویل‌گیرنده:</strong>
+                        {{ order.customer_name }}
+                    </p>
+
+                    {% if order.status == "confirmed" or order.status == "processing" or order.status == "shipped" or order.status == "delivered" %}
+
+                    <p>
+                        <strong>شماره تماس:</strong>
+                        {{ order.phone }}
+                    </p>
+
+                    <p>
+                        <strong>نشانی تحویل:</strong>
+                        {{ order.address }}
+                    </p>
+
+                    {% else %}
+
+                    <p style="color: #dc3545;">
+                        اطلاعات تماس و نشانی پس از تأیید سفارش توسط مدیر سامانه نمایش داده می‌شود.
+                    </p>
+
+                    {% endif %}
+                </div>
+
+                <h4>محصولات مربوط به فروشگاه من</h4>
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>نام محصول</th>
+                            <th>قیمت واحد</th>
+                            <th>تعداد</th>
+                            <th>مبلغ کل</th>
+                            <th>وضعیت و مدیریت</th>
+                        </tr>
+                        
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in order.seller_items %}
+
+                        <tr>
+                            <td>{{ item.product_name }}</td>
+                            <td>{{ item.unit_price }} تومان</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.subtotal }} تومان</td>
+                            <td>
+                                <form method="post"
+                                    action="{% url 'update_seller_order_item_status' item.id %}">
+
+                                    {% csrf_token %}
+
+                                    <select name="status" required
+                                        style="padding: 7px; border-radius: 5px;">
+
+                                        <option value="pending"
+                                            {% if item.status == "pending" %}selected{% endif %}>
+                                                در انتظار آماده‌سازی 
+                                        </option>
+
+                                        <option value="preparing"
+                                            {% if item.status == "preparing" %}selected{% endif %}>
+                                                در حال آماده‌سازی    
+                                        </option>
+
+                                        <option value="ready"
+                                            {% if item.status == "ready" %}selected{% endif %}>
+                                                آماده ارسال
+                                        </option>
+
+                                        <option value="shipped"
+                                            {% if item.status == "shipped" %}selected{% endif %}>
+                                                ارسال شده
+                                        </option>
+
+                                    </select>
+
+                                    <button type="submit"
+                                        style="
+                                            background: #198754;
+                                            color: white;
+                                            border: none;
+                                            padding: 7px 12px;
+                                            border-radius: 5px;
+                                            cursor: pointer;
+                                            margin-top: 5px;
+                                            ">
+                                            ثبت وضعیت
+                                    </button>
+
+                                </form>
+                            </td>
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="4">
+                                محصولی برای نمایش وجود ندارد.
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty-message">
+            هنوز سفارشی برای محصولات شما ثبت نشده است.
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

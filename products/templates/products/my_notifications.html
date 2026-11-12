@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>اعلان‌های من</title>
+
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            background: #f5f7f5;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #198754;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .notification {
+            padding: 18px;
+            margin-bottom: 15px;
+            border-radius: 9px;
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+
+        .notification.unread {
+            background: #edf8f0;
+            border-right: 5px solid #198754;
+        }
+
+        .notification h3 {
+            color: #198754;
+            margin-top: 0;
+        }
+
+        .notification p {
+            line-height: 1.9;
+        }
+
+        .notification small {
+            color: #777;
+        }
+
+        .order-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #198754;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            color: #777;
+            padding: 30px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #198754;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+        
+        .read-button {
+            margin-top: 12px;
+            padding: 9px 16px;
+            background: #198754;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: Tahoma, sans-serif;
+            font-size: 13px;
+        }
+
+        .read-button:hover {
+            background: #146c43;
+        }
+
+        .read-label {
+            color: #777;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            .notification {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    
+    <p style="text-align: center; color: #198754; font-weight: bold;">
+        {{ unread_count }} اعلان خوانده‌نشده
+    </p>
+    <h2>اعلان‌های من</h2>
+
+    {% for notification in notifications %}
+
+        <div class="notification {% if not notification.is_read %}unread{% endif %}">
+
+            <h3>{{ notification.title }}</h3>
+
+            <p>{{ notification.message }}</p>
+
+            <small>
+                تاریخ:
+                {{ notification.created_at|date:"Y/m/d - H:i" }}
+            </small>
+            
+            {% if not notification.is_read %}
+                <form method="post"
+                    action="{% url 'mark_notification_read' notification.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="read-button">
+                            علامت‌گذاری به‌عنوان خوانده‌شده
+                    </button>
+                </form>
+            {% else %}
+                <p class="read-label">این اعلان خوانده شده است.</p>
+            {% endif %}
+            
+            {% if notification.order %}
+                <br>
+                <a href="{% url 'order_detail' notification.order.order_number %}"
+                    class="order-link">
+                    مشاهده جزئیات سفارش
+                </a>
+            {% endif %}
+
+        </div>
+
+    {% empty %}
+
+        <div class="empty">
+            در حال حاضر هیچ اعلانی ندارید.
+        </div>
+
+    {% endfor %}
+
+    <a href="{% url 'my_orders' %}" class="back-button">
+        بازگشت به سفارش‌های من
+    </a>
+
+</div>
+
+</body>
+</html>

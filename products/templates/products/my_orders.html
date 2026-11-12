@@ -1,0 +1,211 @@
+
+
+<div class="container" style="direction: rtl; text-align: right;">
+
+    <h2 style="margin-bottom: 25px;">سفارش‌های من</h2>
+    
+    <form method="get" style="
+        margin: 20px 0;
+        padding: 15px;
+        background: #f5f9f5;
+        border-radius: 8px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    ">
+
+    <input
+        type="text"
+        name="q"
+        value="{{ search_query }}"
+        placeholder="شماره سفارش یا نام محصول را وارد کنید..."
+        style="
+            flex: 1;
+            min-width: 220px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        ">
+
+        {% if selected_status %}
+        <input
+            type="hidden"
+            name="status"
+            value="{{ selected_status }}"
+        >
+        {% endif %}
+
+        <button type="submit" style="
+            padding: 10px 20px;
+            background: #198754;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        ">
+            جست‌وجو
+        </button>
+
+        <a href="{% url 'my_orders' %}" style="
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        ">
+            پاک کردن فیلترها
+        </a>
+
+    </form>
+    
+    <form method="get" style="
+        margin: 20px 0;
+        padding: 15px;
+        background: #f5f9f5;
+        border-radius: 8px;
+    ">
+        <label for="status" style="font-weight: bold;">
+                فیلتر بر اساس وضعیت:
+        </label>
+
+        <select
+            name="status"
+            id="status"
+            onchange="this.form.submit()"
+            style="
+                padding: 8px;
+                margin-right: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                ">
+            <option value="">همه سفارش‌ها</option>
+
+            {% for value, label in status_choices %}
+            <option
+                value="{{ value }}"
+                {% if selected_status == value %}selected{% endif %}
+                >
+                {{ label }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <noscript>
+            <button type="submit">اعمال فیلتر</button>
+        </noscript>
+    </form>
+    {% if orders %}
+
+        {% for order in orders %}
+
+            <div style="
+                border: 1px solid #ddd;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 20px;
+                background: #fff;
+            ">
+
+                <p>
+                    <strong>شماره سفارش:</strong>
+                    {{ order.order_number }}
+                </p>
+
+                <p>
+                    <strong>تاریخ ثبت:</strong>
+                    {{ order.created_at|date:"Y/m/d - H:i" }}
+                </p>
+
+                <p>
+                    <strong>مبلغ کل:</strong>
+                    {{ order.total_amount }} تومان
+                </p>
+
+                <p>
+                    <strong>وضعیت سفارش:</strong>
+
+                    <span style="
+                        color: #198754;
+                        font-weight: bold;
+                    ">
+                        {{ order.get_status_display }}
+                    </span>
+                </p>
+                <div style="
+                        margin: 15px 0;
+                        padding: 15px;
+                        background: #f5f9f5;
+                        border-radius: 8px;
+                    ">
+
+                    <h4 style="color: #198754; margin-top: 0;">
+                        وضعیت محصولات سفارش
+                    </h4>
+
+                    {% for item in order.items.all %}
+
+                    <div style="
+                        padding: 10px;
+                        margin-bottom: 8px;
+                        border-bottom: 1px solid #ddd;
+                        ">
+
+                        <strong>{{ item.product_name }}</strong>
+
+                        <span style="
+                            float: left;
+                            color: #198754;
+                            font-weight: bold;
+                            ">
+                            {{ item.get_status_display }}
+                        </span>
+
+                    </div>
+
+                    {% empty %}
+
+                    <p>محصولی برای این سفارش ثبت نشده است.</p>
+
+                    {% endfor %}
+
+                </div>
+                <p>
+                    <strong>تحویل‌گیرنده:</strong>
+                    {{ order.customer_name }}
+                </p>
+                <a href="{% url 'order_detail' order.order_number %}"
+                    style="
+                        display: inline-block;
+                        background: #198754;
+                        color: white;
+                        text-decoration: none;
+                        padding: 10px 20px;
+                        border-radius: 7px;
+                        margin-top: 10px;
+                        ">
+                        مشاهده جزئیات سفارش     
+                </a>
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+        {% if selected_status %}
+            <p style="
+                text-align: center;
+                color: #856404;
+                background: #fff3cd;
+                padding: 15px;
+                border-radius: 8px;
+                ">
+                سفارشی با وضعیت انتخاب‌شده پیدا نشد.
+            </p>
+        {% else %}
+            <p style="text-align: center;">
+                هنوز سفارشی ثبت نکرده‌اید.
+            </p>
+        {% endif %}
+    {% endif %}
+    
+</div>
+

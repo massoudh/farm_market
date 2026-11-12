@@ -3,9 +3,30 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 from .models import UserProfile
+from django.db import transaction
 
 
 class UserRegistrationForm(UserCreationForm):
+
+    def clean_phone(self):
+        phone = self.cleaned_data["phone"].strip()
+
+        if not phone:
+            raise forms.ValidationError(
+                "وارد کردن شماره تلفن الزامی است."
+            )
+
+        if not phone.replace("+", "", 1).isdigit():
+            raise forms.ValidationError(
+                "شماره تلفن معتبر نیست."
+            )
+
+        if "+" in phone[1:]:
+            raise forms.ValidationError(
+                "علامت + فقط می‌تواند در ابتدای شماره تلفن باشد."
+            )
+
+        return phone
 
     first_name = forms.CharField(
         label="نام",
@@ -92,16 +113,18 @@ class UserRegistrationForm(UserCreationForm):
         user.last_name = self.cleaned_data["last_name"]
 
         if commit:
-            user.save()
+            with transaction.atomic():
 
-            UserProfile.objects.create(
-                user=user,
-                user_type=self.cleaned_data["user_type"],
-                phone=self.cleaned_data["phone"],
-                business_name=self.cleaned_data.get("business_name", ""),
-                address=self.cleaned_data.get("address", ""),
-                is_approved=False,
-            )
+                user.save()
+
+                UserProfile.objects.create(
+                    user=user,
+                    user_type=self.cleaned_data["user_type"],
+                    phone=self.cleaned_data["phone"],
+                    business_name=self.cleaned_data.get("business_name", ""),
+                    address=self.cleaned_data.get("address", ""),
+                    is_approved=False,
+                )
 
         return user
     

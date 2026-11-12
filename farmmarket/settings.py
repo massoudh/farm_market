@@ -136,3 +136,4 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

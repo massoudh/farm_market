@@ -99,8 +99,23 @@
 
 <main class="container">
 
-    <h2>فهرست محصولات ثبت‌شده</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div style="
+                padding: 12px 15px;
+                margin: 15px 0;
+                border-radius: 7px;
+                background-color: {% if message.tags == 'success' %}#e8f5e9{% else %}#fff3e0{% endif %};
+                color: {% if message.tags == 'success' %}#2e7d32{% else %}#795548{% endif %};
+                border-right: 4px solid {% if message.tags == 'success' %}#4caf50{% else %}#ff9800{% endif %};
+            ">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
+    <h2>فهرست محصولات ثبت‌شده</h2>
+    
     {% if products %}
 
     <table class="products-table">
@@ -122,6 +137,7 @@
                 <td>{{ product.price }}</td>
                 <td>{{ product.quantity }}</td>
                 <td>
+                    <!-- دکمه ویرایش -->
                     <a href="{% url 'edit_product' product.id %}"
                         style="display: inline-block;
                         padding: 6px 12px;
@@ -131,6 +147,29 @@
                         border-radius: 5px;">
                         ویرایش
                     </a>
+
+                    <!-- فرم حذف محصول -->
+                    <form method="post"
+                        action="{% url 'delete_product' product.id %}"
+                        style="display: inline-block; margin-right: 5px;"
+                        onsubmit="return confirm('آیا از حذف این محصول مطمئن هستید؟');">
+
+                        {% csrf_token %}
+
+                        <button type="submit"
+                            style="padding: 6px 12px;
+                            background-color: #d32f2f;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            font-family: Tahoma, Arial, sans-serif;">
+
+                            حذف     
+
+                        </button>
+
+                    </form>
                 </td>
             </tr>
             {% endfor %}

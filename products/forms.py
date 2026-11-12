@@ -28,4 +28,20 @@ class ProductForm(forms.ModelForm):
         widgets = {
             "description": forms.Textarea(attrs={"rows": 4}),
         }
-        
+
+class CheckoutForm(forms.Form):
+
+    customer_name = forms.CharField(
+        max_length=200,
+        label="نام و نام خانوادگی تحویل‌گیرنده"
+    )
+
+    phone = forms.CharField(
+        max_length=20,
+        label="شماره تلفن"
+    )
+
+    address = forms.CharField(
+        label="نشانی کامل تحویل",
+        widget=forms.Textarea(attrs={"rows": 4})
+    )
